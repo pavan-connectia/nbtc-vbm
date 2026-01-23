@@ -17,7 +17,7 @@ const Introduction = () => {
 
   return (
     <div className="mx-auto mt-20 flex max-w-[1280px] flex-wrap items-center gap-5 px-3 py-10 md:gap-8 lg:gap-10">
-      <div className="overflow-x-auto lg:w-[55%] lg:px-5">
+      <div className="overflow-x-auto lg:w-[50%] lg:px-5">
         <div className="h-full w-full overflow-x-auto bg-white">
           <Suspense fallback={<div className="size-full" />}>
             <GlobeComponent />
