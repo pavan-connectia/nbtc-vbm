@@ -130,7 +130,7 @@ export default function GlobeComponent({
         />
       </div> */}
 
-      <div className="relative inline-block w-[335px] sm:w-[550px] md:w-[650px] overflow-hidden">
+      <div className="relative inline-block w-[335px] sm:w-[550px] md:w-[580px] overflow-hidden">
         <Img
           src="/globalmap.jpeg"
           className="

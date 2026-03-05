@@ -1,81 +1,80 @@
 import React, { useState } from "react";
-import { LuPhoneCall } from "react-icons/lu";
-import { Button, Heading, HyperLink, QuotationForm } from "../";
+import { LuArrowLeft, LuArrowRight } from "react-icons/lu"; // Import Arrows
+import { Heading } from "../";
 import { useTranslation } from "react-i18next";
 import { useGetEquipmentsByFeaturedPopularDeptIdQuery } from "@/redux/api/equipmentsApi";
 import EquipmentCard from "../core-business/EquipmentCard";
+import Marquee from "react-fast-marquee"; // Import Marquee
 
 const OurServices = () => {
   const { t } = useTranslation();
   const { data: equipDept } = useGetEquipmentsByFeaturedPopularDeptIdQuery();
-  const [showModal, setShowModal] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState(null);
+  
+  // State to control animation direction
+  const [direction, setDirection] = useState("left");
 
   const fltrdFeatured = equipDept?.data?.filter((e) => e.featured === true);
 
   return (
     <div className="my-10">
       <div className="bg-blue">
-        <div className="px-3 py-12 mx-auto sm:px-8">
+        <div className="px-3 py-12 mx-auto max-w-[1440px] sm:px-8">
           <Heading
             variant="big"
-            children="Our Featured Equipments"
-            className="text-white uppercase"
+            className="text-white uppercase mb-10"
           >
             {t("coreBusiness.our_featured_products")}
           </Heading>
 
-          <div className="flex w-full gap-5 mx-auto mt-10 overflow-x-auto scrollbar-hide xl:justify-center">
-            {fltrdFeatured?.map((d) => (
-              <EquipmentCard
-                equipment={{
-                  ...d,
-                  newHref: `/products-service/equipments/${d?.href}`,
-                }}
-                key={d?._id}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col w-full gap-1 md:flex-row">
-        <div className="w-full p-8 bg-accent">
-          <div className="flex flex-wrap items-center justify-center gap-5">
-            <h5 className="text-sm font-medium font-lato text-blue">
-              {t("home.free_quote")}
-            </h5>
-            <Button
-              onClick={() => {
-                setSelectedEquipment({
-                  title: "General Enquiry",
-                  department: import.meta.env.VITE_DEPT_ID,
-                });
-                setShowModal(true);
-              }}
-              text={t("home.get_a_quote")}
-              className="font-kanit bg-red text-sm font-light text-white"
-            />
-          </div>
-        </div>
-
-        <div className="w-full p-8 bg-accent">
-          <div className="flex flex-wrap items-center justify-center gap-5">
-            <h5 className="text-sm font-medium font-lato text-blue">
-              {t("home.not_sure_which_sol")}
-            </h5>
-            <HyperLink
-              href="/contact"
-              icon={<LuPhoneCall />}
-              className={"font-kanit bg-red text-sm font-light text-white"}
+          {/* Animation Container */}
+          <div className="relative flex items-center group">
+            
+            {/* Left Control Button (Changes flow to move RIGHT) */}
+            <button 
+              onClick={() => setDirection("right")}
+              className="absolute left-0 z-40 bg-red p-3 text-white transition-all 
+                         active:scale-90 hover:scale-110 
+                         opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-xl"
+              aria-label="Slide Right"
             >
-              {t("nav.contact_us")}
-            </HyperLink>
+              <LuArrowLeft size={24} className="rtl:rotate-180" />
+            </button>
+
+            {/* Marquee Component */}
+            <Marquee
+              speed={70}           // Speed of movement
+              gradient={false}     // Set true if you want faded edges
+              pauseOnHover={true}  // Stops animation when mouse is over a card
+              direction={direction} // State controlled direction
+              className="py-5"
+            >
+              <div className="flex gap-6 pr-6">
+                {fltrdFeatured?.map((d) => (
+                  <div key={d?._id} className="min-w-[300px] sm:min-w-[350px]">
+                    <EquipmentCard
+                      equipment={{
+                        ...d,
+                        newHref: `/products-service/equipments/${d?.href}`,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </Marquee>
+
+            {/* Right Control Button (Changes flow to move LEFT) */}
+            <button 
+              onClick={() => setDirection("left")}
+              className="absolute right-0 z-40 bg-red p-3 text-white transition-all 
+                         active:scale-90 hover:scale-110 
+                         opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-xl"
+              aria-label="Slide Left"
+            >
+              <LuArrowRight size={24} className="rtl:rotate-180" />
+            </button>
           </div>
         </div>
       </div>
-
-      <QuotationForm isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };
